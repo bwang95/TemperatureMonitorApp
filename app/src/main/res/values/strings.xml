@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Temperature Monitor</string>
+  <string name="app_name">Temperature Monitor</string>
+  <string name="main_content_humidity">{humidity}%</string>
+  <string name="main_content_temperature">{temperature}°{unit}</string>
+  <string name="main_name_humidity">Humidity</string>
+  <string name="main_name_temperature">Temperature</string>
 </resources>

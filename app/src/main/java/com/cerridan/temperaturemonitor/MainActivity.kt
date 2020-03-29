@@ -3,7 +3,6 @@ package com.cerridan.temperaturemonitor
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStore
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cerridan.temperaturemonitor.adapter.MainEpoxyController
@@ -14,8 +13,8 @@ class MainActivity : AppCompatActivity() {
     private val recyclerView: RecyclerView by bindView(R.id.rv_main_items)
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var epoxyController: MainEpoxyController
 
-    private val epoxyController = MainEpoxyController()
     private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        epoxyController = MainEpoxyController(resources)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = epoxyController.adapter
@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.epoxyModels
+            .doOnSubscribe { viewModel.refresh() }
             .subscribe(epoxyController::setData)
             .let(disposables::add)
     }

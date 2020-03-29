@@ -1,6 +1,8 @@
 package com.cerridan.temperaturemonitor
 
 import com.cerridan.temperaturemonitor.api.AmbientService
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
@@ -10,22 +12,27 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object DependencyGraph {
-  val retrofit by lazy {
-    Retrofit.Builder()
-      .client(okHttpClient)
-      .addConverterFactory(MoshiConverterFactory.create())
-      .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-      .build()
+  private val moshi by lazy {
+    Moshi.Builder()
+        .add(KotlinJsonAdapterFactory())
+        .build()
   }
 
-  val okHttpClient by lazy {
+  private val okHttpClient by lazy {
     OkHttpClient.Builder()
-      .addInterceptor(
-        HttpLoggingInterceptor()
-          .apply { level = if (BuildConfig.DEBUG) BODY else NONE }
-      )
-      .build()
+        .addInterceptor(
+            HttpLoggingInterceptor()
+                .apply { level = if (BuildConfig.DEBUG) BODY else NONE }
+        )
+        .build()
   }
 
-  val ambientService by lazy { AmbientService(retrofit) }
+  private val retrofitBuilder by lazy {
+    Retrofit.Builder()
+        .client(okHttpClient)
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+  }
+
+  val ambientService by lazy { AmbientService(retrofitBuilder) }
 }

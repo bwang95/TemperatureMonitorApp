@@ -8,7 +8,7 @@ import io.reactivex.schedulers.Schedulers.io
 import retrofit2.Retrofit
 import retrofit2.http.GET
 
-class AmbientService(retrofit: Retrofit) {
+class AmbientService(retrofitBuilder: Retrofit.Builder) {
   interface AmbientAPI {
     companion object {
       const val BASE_URL = "http://192.168.1.3/"
@@ -18,7 +18,7 @@ class AmbientService(retrofit: Retrofit) {
     fun getAmbientConditions(): Single<AmbientConditions>
   }
 
-  private val api = retrofit.newBuilder()
+  private val api = retrofitBuilder
       .baseUrl(AmbientAPI.BASE_URL)
       .build()
       .create(AmbientAPI::class.java)
