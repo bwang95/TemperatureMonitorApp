@@ -11,7 +11,7 @@ import retrofit2.http.GET
 class AmbientService(retrofitBuilder: Retrofit.Builder) {
   interface AmbientAPI {
     companion object {
-      const val BASE_URL = "http://192.168.1.4/"
+      const val BASE_URL = "http://192.168.1.128/"
     }
 
     @GET("indoor")
