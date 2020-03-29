@@ -4,4 +4,5 @@
   <string name="main_content_temperature">{temperature}°{unit}</string>
   <string name="main_name_humidity">Humidity</string>
   <string name="main_name_temperature">Temperature</string>
+  <string name="main_name_timestamp">Last Updated</string>
 </resources>

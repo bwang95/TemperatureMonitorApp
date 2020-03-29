@@ -11,10 +11,10 @@ import retrofit2.http.GET
 class AmbientService(retrofitBuilder: Retrofit.Builder) {
   interface AmbientAPI {
     companion object {
-      const val BASE_URL = "http://192.168.1.3/"
+      const val BASE_URL = "http://192.168.1.4/"
     }
 
-    @GET("ambient")
+    @GET("indoor")
     fun getAmbientConditions(): Single<AmbientConditions>
   }
 

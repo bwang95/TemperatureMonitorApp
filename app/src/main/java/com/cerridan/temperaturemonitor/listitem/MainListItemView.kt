@@ -31,8 +31,5 @@ class MainListItemView @JvmOverloads constructor(
   fun setNameRes(@StringRes nameRes: Int) = nameView.setText(nameRes)
 
   @ModelProp
-  fun setName(name: CharSequence) { nameView.text = name }
-
-  @ModelProp
   fun setContent(content: CharSequence) { contentView.text = content }
 }
