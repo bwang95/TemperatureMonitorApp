@@ -1,0 +1,2 @@
+rootProject.name='Temperature Monitor'
+include ':app'
