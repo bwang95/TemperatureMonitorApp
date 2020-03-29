@@ -2,6 +2,8 @@ package com.cerridan.temperaturemonitor
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.HORIZONTAL
@@ -44,6 +46,13 @@ class MainActivity : AppCompatActivity() {
             .doOnSubscribe { refreshLayout.isRefreshing = true }
             .doOnNext { refreshLayout.isRefreshing = false }
             .subscribe(epoxyController::setData)
+            .let(disposables::add)
+
+        viewModel.errors
+            .doOnNext { refreshLayout.isRefreshing = false }
+            .subscribe {
+                Toast.makeText(this, "Failed to get temperature data", LENGTH_LONG).show()
+            }
             .let(disposables::add)
 
         refreshLayout.setOnRefreshListener { viewModel.refresh() }

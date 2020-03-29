@@ -13,6 +13,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import java.util.Date
 
 class MainViewModel : ViewModel() {
@@ -23,9 +24,12 @@ class MainViewModel : ViewModel() {
   private val ambientService = DependencyGraph.ambientService
   private val disposables = CompositeDisposable()
   private val epoxyModelSubject = BehaviorSubject.create<List<MainEpoxyModel>>()
+  private val errorsSubject = PublishSubject.create<Throwable>()
 
   val epoxyModels: Observable<List<MainEpoxyModel>>
       get() = epoxyModelSubject.observeOn(mainThread())
+  val errors: Observable<Throwable>
+      get() = errorsSubject.observeOn(mainThread())
 
   init {
     refresh()
@@ -37,7 +41,10 @@ class MainViewModel : ViewModel() {
       .subscribe { result ->
         when (result) {
           is Success -> epoxyModelSubject.onNext(createEpoxyModels(result.value, Date()))
-          is Failure -> Log.e(TAG, "Failed to get ambient conditions", result.throwable)
+          is Failure -> {
+            Log.e(TAG, "Failed to get ambient conditions", result.throwable)
+            errorsSubject.onNext(result.throwable)
+          }
         }
       }
       .let(disposables::add)
